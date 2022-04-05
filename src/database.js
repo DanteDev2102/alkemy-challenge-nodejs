@@ -19,9 +19,16 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
 	dialect
 });
 
+const Character = CharacterModel(sequelize, Sequelize);
+const Gender = GenderModel(sequelize, Sequelize);
+const User = UserModel(sequelize, Sequelize);
+const Movie = MovieModel(sequelize, Sequelize);
+const CharacterMovie = CharacterMovieModel(sequelize, Sequelize);
+const GenderMovie = GenderMovieModel(sequelize, Sequelize);
+
 const databaseConnect = () => {
 	const authorization = sequelize.authenticate();
-	const createTables = sequelize.sync({ force: true });
+	const createTables = sequelize.sync();
 	Promise.all([authorization, createTables])
 		.then(() => console.log('[db] connected'))
 		.catch((error) => {
@@ -29,13 +36,6 @@ const databaseConnect = () => {
 			process.exit(1);
 		});
 };
-
-const Character = CharacterModel(sequelize, Sequelize);
-const Gender = GenderModel(sequelize, Sequelize);
-const User = UserModel(sequelize, Sequelize);
-const Movie = MovieModel(sequelize, Sequelize);
-const CharacterMovie = CharacterMovieModel(sequelize, Sequelize);
-const GenderMovie = GenderMovieModel(sequelize, Sequelize);
 
 module.exports = {
 	databaseConnect,
