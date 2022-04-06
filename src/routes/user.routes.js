@@ -24,7 +24,7 @@ routes.post(
 	}
 );
 
-routes.get(
+routes.put(
 	'/login',
 	[
 		body('username').isAlphanumeric(),

@@ -1,5 +1,8 @@
 const { hash } = require('bcryptjs');
-const { createNewUser } = require('../storage/user.store');
+const {
+	createNewUser,
+	confirmUser
+} = require('../storage/user.store');
 const { createToken } = require('../utils/jwt.utils');
 const sendMail = require('../utils/sendMail.utils');
 
@@ -27,8 +30,19 @@ const register = async (dataNewUser, { errors }) => {
 	});
 };
 
-const login = async (dataUser) => {
-	console.log(dataUser);
+const login = async (dataUser, { errors }) => {
+	if (errors.length > 0) return Promise.reject(errors);
+
+	const User = await confirmUser(dataUser);
+	if (User.error) return Promise.reject(User.error);
+
+	const token = createToken(User, '10h');
+
+	return Promise.resolve({
+		message: 'successfully authenticated user',
+		data: { ...User },
+		token
+	});
 };
 
 module.exports = { register, login };
