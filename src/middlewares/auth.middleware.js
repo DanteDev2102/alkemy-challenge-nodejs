@@ -1,4 +1,3 @@
-const moment = require('moment');
 const { decodeToken } = require('../utils/jwt.utils');
 
 const ensureAuth = (req, res, next) => {
@@ -12,7 +11,7 @@ const ensureAuth = (req, res, next) => {
 	const payload = decodeToken(token);
 
 	try {
-		if (payload.exp <= moment().unix())
+		if (payload.exp <= Math.round(Date.now() / 1000))
 			return res.status(400).send({ error: 'TOKEN EXPIRED' });
 	} catch (err) {
 		return res.status(404).send({ error: 'Invalid Token' });
