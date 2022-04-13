@@ -1,5 +1,5 @@
 const { unlinkSync } = require('fs');
-const path = require('path');
+
 const { hostServer, portServer } = require('../config');
 
 const {
