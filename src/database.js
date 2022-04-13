@@ -28,7 +28,7 @@ const GenderMovie = GenderMovieModel(sequelize, Sequelize);
 
 const databaseConnect = () => {
 	const authorization = sequelize.authenticate();
-	const createTables = sequelize.sync({ force: true });
+	const createTables = sequelize.sync({ force: false });
 	Promise.all([authorization, createTables])
 		.then(() => console.log('[db] connected'))
 		.catch((error) => {

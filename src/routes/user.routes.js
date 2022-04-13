@@ -17,9 +17,15 @@ routes.post(
 			const dataNewUser = req.body;
 			const errors = validationResult(req);
 			const newUser = await register(dataNewUser, errors);
-			res.status(200).send(newUser);
+			return res.status(201).send(newUser);
 		} catch (error) {
-			res.status(500).send(error);
+			if (error.msg === 'Invalid value')
+				return res.status(400).send(error);
+			if (error === 'passwords are different')
+				return res.status(400).send(error);
+			if (error === 'user already exists')
+				return res.status(400).send(error);
+			return res.status(500).send(error);
 		}
 	}
 );

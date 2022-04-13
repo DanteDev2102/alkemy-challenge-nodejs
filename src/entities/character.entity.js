@@ -23,7 +23,7 @@ module.exports = (sequelize, type) => {
 				allowNull: false
 			},
 			picture: {
-				type: type.BLOB('long'),
+				type: type.STRING,
 				allowNull: false
 			}
 		},
