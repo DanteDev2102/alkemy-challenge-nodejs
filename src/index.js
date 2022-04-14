@@ -7,3 +7,7 @@ app.listen(portServer, () => {
 	console.log(`server listening on port ${portServer}`);
 	console.log(`running in ${hostServer}:${portServer}`);
 });
+
+process.on('uncaughtException', (error) => {
+	console.error(`[uncaugth exception] ${error}`);
+});

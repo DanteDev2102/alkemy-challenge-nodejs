@@ -7,25 +7,27 @@ const routes = Router();
 routes.post(
 	'/register',
 	[
-		body('username').isAlphanumeric(),
-		body('password').isStrongPassword(),
-		body('passwordConfirm').isStrongPassword(),
-		body('email').isEmail()
+		body('username').trim().isAlphanumeric().escape(),
+		body('password').trim().isStrongPassword().escape(),
+		body('passwordConfirm').trim().isStrongPassword().escape(),
+		body('email').trim().isEmail().normalizeEmail().escape()
 	],
 	async (req, res) => {
 		try {
 			const dataNewUser = req.body;
 			const errors = validationResult(req);
 			const newUser = await register(dataNewUser, errors);
-			return res.status(201).send(newUser);
+			res.status(201).send(newUser);
 		} catch (error) {
-			if (error.msg === 'Invalid value')
-				return res.status(400).send(error);
-			if (error === 'passwords are different')
-				return res.status(400).send(error);
-			if (error === 'user already exists')
-				return res.status(400).send(error);
-			return res.status(500).send(error);
+			error.msg
+				? res.status(400).send(error)
+				: Array.isArray(error)
+				? res.status(400).send(error)
+				: error === 'passwords are different'
+				? res.status(400).send(error)
+				: error === 'user already exists'
+				? res.status(417).send(error)
+				: res.status(500).send(error);
 		}
 	}
 );
@@ -33,8 +35,8 @@ routes.post(
 routes.put(
 	'/login',
 	[
-		body('username').isAlphanumeric(),
-		body('password').isStrongPassword()
+		body('username').isAlphanumeric().trim().escape(),
+		body('password').isStrongPassword().trim().escape()
 	],
 	async (req, res) => {
 		try {

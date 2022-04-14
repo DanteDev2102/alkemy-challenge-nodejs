@@ -11,10 +11,13 @@ const createNewUser = async (dataNewUser) => {
 		const isExistUsername = await User.findOne({
 			where: { username }
 		});
+
 		if (isExistUsername) throw new Error('user already exists');
 
 		const { dataValues } = await User.create(dataNewUser);
+
 		delete dataValues.password;
+
 		return dataValues;
 	} catch (error) {
 		return { error: error.message };
@@ -26,6 +29,7 @@ const confirmUser = async ({ username, password }) => {
 		const isExistUser = await User.findOne({
 			where: { username }
 		});
+
 		if (!isExistUser)
 			throw new Error('wrong username or password');
 
@@ -33,10 +37,12 @@ const confirmUser = async ({ username, password }) => {
 			password,
 			isExistUser.dataValues.password
 		);
+
 		if (!isCorrectPassword)
 			throw new Error('wrong username or password');
 
 		delete isExistUser.dataValues.password;
+
 		return isExistUser.dataValues;
 	} catch (error) {
 		return { error: error.message };
