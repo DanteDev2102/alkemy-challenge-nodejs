@@ -5,7 +5,8 @@ const { hostServer, portServer } = require('../config');
 const {
 	createNewCharacter,
 	updateCharacter,
-	removeCharacter
+	removeCharacter,
+	getAllCharacters
 } = require('../storage/character.storage');
 
 const register = async (dataNewCharacter, file, { errors }) => {
@@ -59,4 +60,6 @@ const remove = async (id, { errors }) => {
 	return Promise.resolve(deleteCharacter);
 };
 
-module.exports = { register, update, remove };
+const list = async () => Promise.resolve(getAllCharacters());
+
+module.exports = { register, update, remove, list };

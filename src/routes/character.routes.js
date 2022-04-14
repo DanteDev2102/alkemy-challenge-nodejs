@@ -7,7 +7,8 @@ const {
 const {
 	register,
 	update,
-	remove
+	remove,
+	list
 } = require('../services/character.service');
 const __FilterFiles = require('../middlewares/FilterFiles.middleare');
 
@@ -84,11 +85,20 @@ routes.delete(
 			const { id } = req.params;
 			const errors = validationResult(req);
 			const deleteCharacter = await remove(id, errors);
-			res.sendStatus(200).send(deleteCharacter);
+			res.send(deleteCharacter);
 		} catch (error) {
 			res.status(500).send(error);
 		}
 	}
 );
+
+routes.get('/', async (req, res) => {
+	try {
+		const getAll = await list();
+		res.send(getAll);
+	} catch (error) {
+		res.status(500).send(error);
+	}
+});
 
 module.exports = routes;

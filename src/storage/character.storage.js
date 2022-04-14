@@ -8,10 +8,12 @@ const createNewCharacter = async (dataNewCharacter) => {
 			where: { name: dataNewCharacter.name }
 		});
 
-		if (isExistCharacter)
+		if (isExistCharacter) {
 			throw new Error('character already exist');
+		}
 
 		const newCharacter = await Character.create(dataNewCharacter);
+
 		return newCharacter;
 	} catch (error) {
 		return { error: error.message };
@@ -68,8 +70,21 @@ const removeCharacter = async (id) => {
 	}
 };
 
+const getAllCharacters = async () => {
+	try {
+		const allCharacters = await Character.findAll({
+			attributes: ['name', 'picture']
+		});
+
+		return allCharacters;
+	} catch (error) {
+		return { error: error.message };
+	}
+};
+
 module.exports = {
 	createNewCharacter,
 	updateCharacter,
-	removeCharacter
+	removeCharacter,
+	getAllCharacters
 };
