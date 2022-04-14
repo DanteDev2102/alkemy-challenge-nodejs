@@ -45,7 +45,13 @@ routes.put(
 			const User = await login(dataUser, errors);
 			res.status(200).send(User);
 		} catch (error) {
-			res.status(500).send(error);
+			error.msg
+				? res.status(400).send(error)
+				: Array.isArray(error)
+				? res.status(400).send(error)
+				: error === 'wrong username or password'
+				? res.status(401).send(error)
+				: res.status(500).send(error);
 		}
 	}
 );
