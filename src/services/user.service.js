@@ -11,11 +11,17 @@ const register = async (dataNewUser, { errors }) => {
 
 	const { password, passwordConfirm, email } = dataNewUser;
 
-	if (password !== passwordConfirm)
+	if (password !== passwordConfirm) {
 		return Promise.reject('passwords are different');
+	}
 
 	delete dataNewUser.passwordConfirm;
-	dataNewUser.password = await hash(password, 10);
+
+	try {
+		dataNewUser.password = await hash(password, 10);
+	} catch (error) {
+		return Promise.reject(error.message);
+	}
 
 	const newUser = await createNewUser(dataNewUser);
 	if (newUser.error) return Promise.reject(newUser.error);
