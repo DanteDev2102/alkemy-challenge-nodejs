@@ -60,6 +60,6 @@ const remove = async (id, { errors }) => {
 	return Promise.resolve(deleteCharacter);
 };
 
-const list = async () => Promise.resolve(getAllCharacters());
+const list = async () => Promise.resolve(await getAllCharacters());
 
 module.exports = { register, update, remove, list };

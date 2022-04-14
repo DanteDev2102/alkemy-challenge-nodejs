@@ -4,17 +4,17 @@ const { Character } = require('../database');
 
 const createNewCharacter = async (dataNewCharacter) => {
 	try {
-		const isExistCharacter = await Character.findOne({
-			where: { name: dataNewCharacter.name }
-		});
+		const [{ dataValues }, created] =
+			await Character.findOrCreate({
+				where: { name: dataNewCharacter.name },
+				defaults: { ...dataNewCharacter }
+			});
 
-		if (isExistCharacter) {
+		if (!created) {
 			throw new Error('character already exist');
 		}
 
-		const newCharacter = await Character.create(dataNewCharacter);
-
-		return newCharacter;
+		return dataValues;
 	} catch (error) {
 		return { error: error.message };
 	}

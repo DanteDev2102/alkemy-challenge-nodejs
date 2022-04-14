@@ -87,7 +87,9 @@ routes.delete(
 			const deleteCharacter = await remove(id, errors);
 			res.send(deleteCharacter);
 		} catch (error) {
-			res.status(500).send(error);
+			error.msg
+				? res.status(400).send(error.msg)
+				: res.status(500).send(error);
 		}
 	}
 );
