@@ -1,20 +1,21 @@
 const { compare } = require('bcryptjs');
 const { User } = require('../database');
+const { Op } = require('sequelize');
 
-const createNewUser = async (dataNewUser) => {
+const createNewUser = async ({ email, username, password }) => {
 	try {
-		const { email, username } = dataNewUser;
-
-		const isExistEmail = await User.findOne({ where: { email } });
-		if (isExistEmail) throw new Error('user already exists');
-
-		const isExistUsername = await User.findOne({
-			where: { username }
+		const [{ dataValues }, created] = await User.findOrCreate({
+			where: {
+				[Op.or]: [{ email }, { username }]
+			},
+			defaults: {
+				email,
+				password,
+				username
+			}
 		});
 
-		if (isExistUsername) throw new Error('user already exists');
-
-		const { dataValues } = await User.create(dataNewUser);
+		if (!created) throw new Error('user already exist');
 
 		delete dataValues.password;
 
@@ -26,24 +27,26 @@ const createNewUser = async (dataNewUser) => {
 
 const confirmUser = async ({ username, password }) => {
 	try {
-		const isExistUser = await User.findOne({
+		const { dataValues } = await User.findOne({
 			where: { username }
 		});
 
-		if (!isExistUser)
+		if (!dataValues) {
 			throw new Error('wrong username or password');
+		}
 
 		const isCorrectPassword = compare(
 			password,
-			isExistUser.dataValues.password
+			dataValues.password
 		);
 
-		if (!isCorrectPassword)
+		if (!isCorrectPassword) {
 			throw new Error('wrong username or password');
+		}
 
-		delete isExistUser.dataValues.password;
+		delete dataValues.password;
 
-		return isExistUser.dataValues;
+		return dataValues;
 	} catch (error) {
 		return { error: error.message };
 	}
