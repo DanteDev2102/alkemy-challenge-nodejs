@@ -191,7 +191,7 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,node
 
-.png
-.jpg
-.jpeg
-.webp
+*.png
+*.jpg
+*.jpeg
+*.webp
