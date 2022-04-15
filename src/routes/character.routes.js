@@ -11,7 +11,8 @@ const {
 	list,
 	details
 } = require('../services/character.service');
-const __FilterFiles = require('../middlewares/FilterFiles.middleare');
+const __FilterFiles = require('../middlewares/FilterFiles.middleware');
+const __optionalFile = require('../middlewares/optionalFile.middleware');
 
 const routes = Router();
 
@@ -53,6 +54,7 @@ routes.put(
 		body('age').trim().isInt().optional(),
 		body('history').isString().trim().escape().optional(),
 		param('id').trim().isInt(),
+		__optionalFile,
 		__FilterFiles
 	],
 	async (req, res) => {
