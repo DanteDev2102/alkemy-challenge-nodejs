@@ -6,7 +6,8 @@ const {
 	createNewCharacter,
 	updateCharacter,
 	removeCharacter,
-	getAllCharacters
+	getAllCharacters,
+	getCharacterDetails
 } = require('../storage/character.storage');
 
 const register = async (dataNewCharacter, file, { errors }) => {
@@ -15,9 +16,7 @@ const register = async (dataNewCharacter, file, { errors }) => {
 		return Promise.reject(errors);
 	}
 
-	if (file) {
-		dataNewCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
-	}
+	dataNewCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
 
 	const newCharacter = await createNewCharacter(dataNewCharacter);
 
@@ -62,4 +61,14 @@ const remove = async (id, { errors }) => {
 
 const list = async () => Promise.resolve(await getAllCharacters());
 
-module.exports = { register, update, remove, list };
+const details = async (id, { errors }) => {
+	if (errors.length > 0) return Promise.reject(errors);
+
+	const character = await getCharacterDetails(id);
+
+	if (character.error) return Promise.reject(character.error);
+
+	return Promise.resolve(character);
+};
+
+module.exports = { register, update, remove, list, details };

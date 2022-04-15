@@ -82,9 +82,20 @@ const getAllCharacters = async () => {
 	}
 };
 
+const getCharacterDetails = async (id) => {
+	try {
+		const character = await Character.findByPk(id);
+
+		return character;
+	} catch (error) {
+		return { error: error.message };
+	}
+};
+
 module.exports = {
 	createNewCharacter,
 	updateCharacter,
 	removeCharacter,
-	getAllCharacters
+	getAllCharacters,
+	getCharacterDetails
 };

@@ -8,7 +8,8 @@ const {
 	register,
 	update,
 	remove,
-	list
+	list,
+	details
 } = require('../services/character.service');
 const __FilterFiles = require('../middlewares/FilterFiles.middleare');
 
@@ -59,6 +60,7 @@ routes.put(
 			const dataCharacter = req.body;
 			const { id } = req.params;
 			const file = req.file.filename;
+			console.log(file, id, dataCharacter);
 			const errors = validationResult(req);
 			const updateCharacter = await update(
 				dataCharacter,
@@ -100,6 +102,19 @@ routes.get('/', async (req, res) => {
 		res.json(getAll);
 	} catch (error) {
 		res.status(500).json(error);
+	}
+});
+
+routes.get('/:id', param('id').trim().isInt(), async (req, res) => {
+	try {
+		const { id } = req.params;
+		const errors = validationResult(req);
+		const character = await details(id, errors);
+		res.json(character);
+	} catch (error) {
+		error.msg
+			? res.status(400).json(error.msg)
+			: res.status(500).json(error);
 	}
 });
 
