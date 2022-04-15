@@ -32,15 +32,15 @@ routes.post(
 				file,
 				errors
 			);
-			res.status(201).send(newCharacter);
+			res.status(201).json(newCharacter);
 		} catch (error) {
 			error.msg
-				? res.status(400).send(error.msg)
+				? res.status(400).json(error.msg)
 				: Array.isArray(error)
-				? res.status(400).send(error)
+				? res.status(400).json(error)
 				: error === 'character already exist'
-				? res.status(417).send(error)
-				: res.status(500).send(error);
+				? res.status(417).json(error)
+				: res.status(500).json(error);
 		}
 	}
 );
@@ -66,13 +66,13 @@ routes.put(
 				file,
 				errors
 			);
-			res.status(201).send(updateCharacter);
+			res.status(201).json(updateCharacter);
 		} catch (error) {
 			error.msg
-				? res.status(400).send(error.msg)
+				? res.status(400).json(error.msg)
 				: Array.isArray(error)
-				? res.status(400).send(error)
-				: res.status(500).send(error);
+				? res.status(400).json(error)
+				: res.status(500).json(error);
 		}
 	}
 );
@@ -85,11 +85,11 @@ routes.delete(
 			const { id } = req.params;
 			const errors = validationResult(req);
 			const deleteCharacter = await remove(id, errors);
-			res.send(deleteCharacter);
+			res.json(deleteCharacter);
 		} catch (error) {
 			error.msg
-				? res.status(400).send(error.msg)
-				: res.status(500).send(error);
+				? res.status(400).json(error.msg)
+				: res.status(500).json(error);
 		}
 	}
 );
@@ -97,9 +97,9 @@ routes.delete(
 routes.get('/', async (req, res) => {
 	try {
 		const getAll = await list();
-		res.send(getAll);
+		res.json(getAll);
 	} catch (error) {
-		res.status(500).send(error);
+		res.status(500).json(error);
 	}
 });
 

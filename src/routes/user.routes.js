@@ -17,17 +17,17 @@ routes.post(
 			const dataNewUser = req.body;
 			const errors = validationResult(req);
 			const newUser = await register(dataNewUser, errors);
-			res.status(201).send(newUser);
+			res.status(201).json(newUser);
 		} catch (error) {
 			error.msg
-				? res.status(400).send(error)
+				? res.status(400).json(error)
 				: Array.isArray(error)
-				? res.status(400).send(error)
+				? res.status(400).json(error)
 				: error === 'passwords are different'
-				? res.status(400).send(error)
+				? res.status(400).json(error)
 				: error === 'user already exists'
-				? res.status(417).send(error)
-				: res.status(500).send(error);
+				? res.status(417).json(error)
+				: res.status(500).json(error);
 		}
 	}
 );
@@ -43,15 +43,15 @@ routes.put(
 			const dataUser = req.body;
 			const errors = validationResult(req);
 			const User = await login(dataUser, errors);
-			res.status(200).send(User);
+			res.status(200).json(User);
 		} catch (error) {
 			error.msg
-				? res.status(400).send(error)
+				? res.status(400).json(error)
 				: Array.isArray(error)
-				? res.status(400).send(error)
+				? res.status(400).json(error)
 				: error === 'wrong username or password'
-				? res.status(401).send(error)
-				: res.status(500).send(error);
+				? res.status(401).json(error)
+				: res.status(500).json(error);
 		}
 	}
 );
