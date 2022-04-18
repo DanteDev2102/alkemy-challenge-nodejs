@@ -21,11 +21,11 @@ module.exports = (sequelize, type) => {
 			},
 			score: {
 				type: type.INTEGER,
-				allowNull: false,
-				validate: {
-					min: 1,
-					max: 5
-				}
+				allowNull: false
+				// validate: {
+				// 	min: 1,
+				// 	max: 5
+				// }
 			}
 		},
 		{ timestamps: false, underscored: true }

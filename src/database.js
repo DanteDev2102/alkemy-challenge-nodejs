@@ -4,7 +4,6 @@ const GenderModel = require('./entities/gender.entity');
 const UserModel = require('./entities/user.entity');
 const MovieModel = require('./entities/movie.entity');
 const CharacterMovieModel = require('./entities/character-movie.entity');
-const GenderMovieModel = require('./entities/gender-movie.entity');
 
 const {
 	dbName,
@@ -24,7 +23,6 @@ const Gender = GenderModel(sequelize, Sequelize);
 const User = UserModel(sequelize, Sequelize);
 const Movie = MovieModel(sequelize, Sequelize);
 const CharacterMovie = CharacterMovieModel(sequelize, Sequelize);
-const GenderMovie = GenderMovieModel(sequelize, Sequelize);
 
 const databaseConnect = () => {
 	const authorization = sequelize.authenticate();
@@ -44,6 +42,5 @@ module.exports = {
 	User,
 	Movie,
 	Character,
-	CharacterMovie,
-	GenderMovie
+	CharacterMovie
 };
