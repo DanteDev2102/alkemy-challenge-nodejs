@@ -7,7 +7,8 @@ const {
 const {
 	register,
 	list,
-	remove
+	remove,
+	update
 } = require('../services/movie.service');
 const __FilterFiles = require('../middlewares/FilterFiles.middleware');
 const __optionalFile = require('../middlewares/optionalFile.middleware');
@@ -66,6 +67,39 @@ routes.delete(
 		} catch (error) {
 			error.msg
 				? res.status(400).json(error.msg)
+				: res.status(500).json(error);
+		}
+	}
+);
+
+routes.put(
+	'/:id',
+	[
+		body('title').isAlpha().trim().escape().optional(),
+		body('creationDate').trim().isDate().optional(),
+		body('score').isInt().trim().optional(),
+		param('id').trim().isInt(),
+		__optionalFile,
+		__FilterFiles
+	],
+	async (req, res) => {
+		try {
+			const dataMovie = req.body;
+			const file = req.file.filename;
+			const { id } = req.params;
+			const errors = validationResult(req);
+			const updateMovie = await update(
+				dataMovie,
+				file,
+				id,
+				errors
+			);
+			res.status(200).json(updateMovie);
+		} catch (error) {
+			error.msg
+				? res.status(400).json(error.msg)
+				: Array.isArray(error)
+				? res.status(400).json(error)
 				: res.status(500).json(error);
 		}
 	}

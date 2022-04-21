@@ -8,6 +8,5 @@ module.exports = (req, res, next) => {
 			originalname: 'default.png'
 		};
 	}
-	console.log(req.file);
 	next();
 };

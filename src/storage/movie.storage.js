@@ -51,4 +51,39 @@ const removeMovie = async (id) => {
 	}
 };
 
-module.exports = { createNewMovie, getAllMovies, removeMovie };
+const updateMovie = async (dataMovie, id) => {
+	try {
+		const findMovie = await Movie.findOne({
+			where: { id }
+		});
+
+		if (!findMovie) throw new Error('not exist Movie');
+
+		const updateMovie = {
+			...findMovie.dataValues,
+			...dataMovie
+		};
+
+		if (dataMovie.picture) {
+			const file = findMovie.dataValues.picture
+				.split('/')
+				.at(-1);
+
+			unlinkSync(path.join(__dirname, '../files', file));
+		}
+
+		await findMovie.set(updateMovie);
+		await findMovie.save();
+
+		return findMovie;
+	} catch (error) {
+		return { error: error.message };
+	}
+};
+
+module.exports = {
+	createNewMovie,
+	getAllMovies,
+	removeMovie,
+	updateMovie
+};
