@@ -1,4 +1,6 @@
+const path = require('path');
 const { Movie } = require('../database');
+const { unlinkSync } = require('fs');
 
 const createNewMovie = async (dataNewMovie) => {
 	try {
@@ -29,4 +31,24 @@ const getAllMovies = async () => {
 	}
 };
 
-module.exports = { createNewMovie, getAllMovies };
+const removeMovie = async (id) => {
+	try {
+		const movie = await Movie.findOne({
+			where: { id }
+		});
+
+		if (!movie) throw new Error('not exist Movie');
+
+		const file = movie.dataValues.picture.split('/').at(-1);
+
+		unlinkSync(path.join(__dirname, '../files', file));
+
+		const deleteMovie = await movie.destroy();
+
+		return deleteMovie;
+	} catch (error) {
+		return { error: error.message };
+	}
+};
+
+module.exports = { createNewMovie, getAllMovies, removeMovie };

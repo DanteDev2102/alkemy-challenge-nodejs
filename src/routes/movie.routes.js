@@ -1,6 +1,14 @@
 const { Router } = require('express');
-const { body, validationResult } = require('express-validator');
-const { register, list } = require('../services/movie.service');
+const {
+	body,
+	param,
+	validationResult
+} = require('express-validator');
+const {
+	register,
+	list,
+	remove
+} = require('../services/movie.service');
 const __FilterFiles = require('../middlewares/FilterFiles.middleware');
 const __optionalFile = require('../middlewares/optionalFile.middleware');
 
@@ -45,5 +53,22 @@ routes.get('/', async (req, res) => {
 		res.status(500).json(error);
 	}
 });
+
+routes.delete(
+	'/:id',
+	param('id').trim().isInt(),
+	async (req, res) => {
+		try {
+			const { id } = req.params;
+			const errors = validationResult(req);
+			const deleteMovie = await remove(id, errors);
+			res.json(deleteMovie);
+		} catch (error) {
+			error.msg
+				? res.status(400).json(error.msg)
+				: res.status(500).json(error);
+		}
+	}
+);
 
 module.exports = routes;

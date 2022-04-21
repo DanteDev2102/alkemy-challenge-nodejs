@@ -1,6 +1,7 @@
 const {
 	createNewMovie,
-	getAllMovies
+	getAllMovies,
+	removeMovie
 } = require('../storage/movie.storage');
 const { hostServer, portServer } = require('../config');
 const { unlinkSync } = require('fs');
@@ -28,6 +29,18 @@ const register = async (dataNewMovie, file, { errors }) => {
 	return newMovie;
 };
 
+const remove = async (id, { errors }) => {
+	if (errors.length > 0) return Promise.reject(errors);
+
+	const deleteMovie = await removeMovie(id);
+
+	if (deleteMovie.error) {
+		return Promise.reject(deleteMovie.error);
+	}
+
+	return Promise.resolve(deleteMovie);
+};
+
 const list = async () => Promise.resolve(await getAllMovies());
 
-module.exports = { register, list };
+module.exports = { register, list, remove };
