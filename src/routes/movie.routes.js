@@ -1,9 +1,8 @@
 const { Router } = require('express');
 const { body, validationResult } = require('express-validator');
-const { register } = require('../services/movie.service');
+const { register, list } = require('../services/movie.service');
 const __FilterFiles = require('../middlewares/FilterFiles.middleware');
 const __optionalFile = require('../middlewares/optionalFile.middleware');
-const res = require('express/lib/response');
 
 const routes = Router();
 
@@ -38,6 +37,13 @@ routes.post(
 	}
 );
 
-routes.get('/', (req, res) => res.json({ msg: 'hola' }));
+routes.get('/', async (req, res) => {
+	try {
+		const getAll = await list();
+		res.json(getAll);
+	} catch (error) {
+		res.status(500).json(error);
+	}
+});
 
 module.exports = routes;

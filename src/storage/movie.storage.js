@@ -17,4 +17,16 @@ const createNewMovie = async (dataNewMovie) => {
 	}
 };
 
-module.exports = { createNewMovie };
+const getAllMovies = async () => {
+	try {
+		const allMovies = await Movie.findAll({
+			attributes: ['title', 'picture', 'creationDate']
+		});
+
+		return allMovies;
+	} catch (error) {
+		return { error: error.message };
+	}
+};
+
+module.exports = { createNewMovie, getAllMovies };

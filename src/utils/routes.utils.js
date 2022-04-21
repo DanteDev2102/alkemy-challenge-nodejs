@@ -7,6 +7,6 @@ const movieRouter = require('../routes/movie.routes');
 module.exports = (server) => {
 	server.use('/auth', userRouter);
 	server.use('/characters', characterRouter);
-	server.use('/movie', movieRouter);
+	server.use('/movies', movieRouter);
 	server.use('/files', static(join(__dirname, '../files')));
 };

@@ -1,4 +1,7 @@
-const { createNewMovie } = require('../storage/movie.storage');
+const {
+	createNewMovie,
+	getAllMovies
+} = require('../storage/movie.storage');
 const { hostServer, portServer } = require('../config');
 const { unlinkSync } = require('fs');
 
@@ -15,7 +18,6 @@ const register = async (dataNewMovie, file, { errors }) => {
 
 	dataNewMovie.picture = `${hostServer}:${portServer}/files/${file}`;
 
-	console.log('morite');
 	const newMovie = await createNewMovie(dataNewMovie);
 
 	if (newMovie.error) {
@@ -26,4 +28,6 @@ const register = async (dataNewMovie, file, { errors }) => {
 	return newMovie;
 };
 
-module.exports = { register };
+const list = async () => Promise.resolve(await getAllMovies());
+
+module.exports = { register, list };
