@@ -11,64 +11,74 @@ const {
 } = require('../storage/character.storage');
 
 const register = async (dataNewCharacter, file, { errors }) => {
-	if (errors.length > 0) {
-		unlinkSync(`src/files/${file}`);
-		return Promise.reject(errors);
+	try {
+		if (errors.length > 0) {
+			unlinkSync(`src/files/${file}`);
+			throw new Error(errors);
+		}
+
+		dataNewCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
+
+		const newCharacter = await createNewCharacter(
+			dataNewCharacter
+		);
+
+		if (newCharacter.error) {
+			unlinkSync(`src/files/${file}`);
+			throw new Error(newCharacter.error);
+		}
+
+		return newCharacter;
+	} catch (error) {
+		return { error: error.message };
 	}
-
-	dataNewCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
-
-	const newCharacter = await createNewCharacter(dataNewCharacter);
-
-	if (newCharacter.error) {
-		unlinkSync(`src/files/${file}`);
-		return Promise.reject(newCharacter.error);
-	}
-
-	return Promise.resolve(newCharacter);
 };
 
 const update = async (dataCharacter, id, file, { errors }) => {
-	if (errors.length > 0) return Promise.reject(errors);
+	try {
+		if (errors.length > 0) throw new Error(errors);
 
-	if (file) {
-		dataCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
+		if (file) {
+			dataCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
+		}
+
+		const modifiedCharacter = await updateCharacter(
+			dataCharacter,
+			id
+		);
+
+		if (modifiedCharacter.error) {
+			throw new Error(modifiedCharacter.error);
+		}
+
+		return modifiedCharacter;
+	} catch (error) {
+		return { error: error.message };
 	}
-
-	const modifiedCharacter = await updateCharacter(
-		dataCharacter,
-		id
-	);
-
-	if (modifiedCharacter.error) {
-		Promise.reject(modifiedCharacter.error);
-	}
-
-	return Promise.resolve(modifiedCharacter);
 };
 
 const remove = async (id, { errors }) => {
-	if (errors.length > 0) return Promise.reject(errors);
+	if (errors.length > 0) throw new Error(errors);
 
 	const deleteCharacter = await removeCharacter(id);
 
 	if (deleteCharacter.error) {
-		return Promise.reject(deleteCharacter.error);
+		throw new Error(deleteCharacter.error);
 	}
 
-	return Promise.resolve(deleteCharacter);
+	return deleteCharacter;
 };
 
-const list = async () => Promise.resolve(await getAllCharacters());
+const list = async () => await getAllCharacters();
 
 const details = async (id, { errors }) => {
-	if (errors.length > 0) return Promise.reject(errors);
+	if (errors.length > 0) throw new Error(errors);
 
 	const character = await getCharacterDetails(id);
 
-	if (character.error) return Promise.reject(character.error);
+	if (character.error) throw new Error(character.error);
 
-	return Promise.resolve(character);
+	return character;
 };
 
 module.exports = { register, update, remove, list, details };

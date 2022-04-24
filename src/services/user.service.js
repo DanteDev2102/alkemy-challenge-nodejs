@@ -7,12 +7,12 @@ const { createToken } = require('../utils/jwt.utils');
 const sendMail = require('../utils/sendMail.utils');
 
 const register = async (dataNewUser, { errors }) => {
-	if (errors.length > 0) return Promise.reject(errors);
+	if (errors.length > 0) throw new Error(errors);
 
 	const { password, passwordConfirm, email } = dataNewUser;
 
 	if (password !== passwordConfirm) {
-		return Promise.reject('passwords are different');
+		throw new Error('passwords are different');
 	}
 
 	delete dataNewUser.passwordConfirm;
@@ -20,35 +20,35 @@ const register = async (dataNewUser, { errors }) => {
 	try {
 		dataNewUser.password = await hash(password, 10);
 	} catch (error) {
-		return Promise.reject(error.message);
+		throw new Error(error.message);
 	}
 
 	const newUser = await createNewUser(dataNewUser);
-	if (newUser.error) return Promise.reject(newUser.error);
+	if (newUser.error) throw new Error(newUser.error);
 
 	const token = createToken(newUser, '10h');
 	sendMail(email);
 
-	return Promise.resolve({
+	return {
 		message: 'user created successfully',
 		data: { ...newUser },
 		token
-	});
+	};
 };
 
 const login = async (dataUser, { errors }) => {
-	if (errors.length > 0) return Promise.reject(errors);
+	if (errors.length > 0) throw new Error(errors);
 
 	const User = await confirmUser(dataUser);
-	if (User.error) return Promise.reject(User.error);
+	if (User.error) throw new Error(User.error);
 
 	const token = createToken(User, '10h');
 
-	return Promise.resolve({
+	return {
 		message: 'successfully authenticated user',
 		data: { ...User },
 		token
-	});
+	};
 };
 
 module.exports = { register, login };

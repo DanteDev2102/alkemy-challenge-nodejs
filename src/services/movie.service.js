@@ -10,12 +10,12 @@ const { unlinkSync } = require('fs');
 const register = async (dataNewMovie, file, { errors }) => {
 	if (errors.length > 0) {
 		unlinkSync(`src/files/${file}`);
-		return Promise.reject(errors);
+		throw new Error(errors);
 	}
 	const { score } = dataNewMovie;
 
 	if (score < 1 || score > 5) {
-		return Promise.reject('invalid score');
+		throw new Error('invalid score');
 	}
 
 	dataNewMovie.picture = `${hostServer}:${portServer}/files/${file}`;
@@ -24,26 +24,26 @@ const register = async (dataNewMovie, file, { errors }) => {
 
 	if (newMovie.error) {
 		unlinkSync(`src/files/${file}`);
-		return Promise.reject(newMovie.error);
+		throw new Error(newMovie.error);
 	}
 
 	return newMovie;
 };
 
 const remove = async (id, { errors }) => {
-	if (errors.length > 0) return Promise.reject(errors);
+	if (errors.length > 0) throw new Error(errors);
 
 	const deleteMovie = await removeMovie(id);
 
 	if (deleteMovie.error) {
-		return Promise.reject(deleteMovie.error);
+		throw new Error(deleteMovie.error);
 	}
 
-	return Promise.resolve(deleteMovie);
+	return deleteMovie;
 };
 
 const update = async (dataMovie, file, id, { errors }) => {
-	if (errors.length > 0) return Promise.reject(errors);
+	if (errors.length > 0) throw new Error(errors);
 
 	if (file) {
 		dataMovie.picture = `${hostServer}:${portServer}/files/${file}`;
@@ -51,12 +51,12 @@ const update = async (dataMovie, file, id, { errors }) => {
 	const modifiedMovie = await updateMovie(dataMovie, id);
 
 	if (modifiedMovie.error) {
-		Promise.reject(modifiedMovie.error);
+		throw new Error(modifiedMovie.error);
 	}
 
-	return Promise.resolve(modifiedMovie);
+	return modifiedMovie;
 };
 
-const list = async () => Promise.resolve(await getAllMovies());
+const list = async () => await getAllMovies();
 
 module.exports = { register, list, remove, update };

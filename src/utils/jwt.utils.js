@@ -6,7 +6,7 @@ const createToken = (user, expiresIn) => {
 };
 
 const decodeToken = (token) => {
-	return jwt.decode(token, secret_key_jwt);
+	return jwt.verify(token, secret_key_jwt);
 };
 
 module.exports = {
