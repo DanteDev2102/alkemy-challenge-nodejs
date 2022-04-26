@@ -1,6 +1,6 @@
 const { unlinkSync } = require('fs');
 const path = require('path');
-
+const { Op } = require('sequelize');
 const { Character, CharacterMovie, Movie } = require('../database');
 const { sequelize } = require('../database');
 
@@ -30,7 +30,6 @@ const createNewCharacter = async ({
 
 		return dataValues;
 	} catch (error) {
-		console.log(error);
 		await transaction.rollback();
 		return { error: error.message };
 	}
@@ -86,12 +85,59 @@ const removeCharacter = async (id) => {
 	}
 };
 
-const getAllCharacters = async () => {
+const getAllCharacters = async ({
+	movieId = '',
+	age = '',
+	name = ''
+}) => {
 	try {
-		const allCharacters = await Character.findAll({
-			attributes: ['name', 'picture']
-		});
+		let allCharacters;
 
+		if (!movieId && !age) {
+			allCharacters = await Character.findAll({
+				attributes: ['name', 'picture'],
+				where: {
+					name: { [Op.like]: `%${name}%` }
+				}
+			});
+		} else if (!age && movieId) {
+			allCharacters = await Character.findAll({
+				attributes: ['name', 'picture'],
+				where: {
+					name: { [Op.like]: `%${name}%` }
+				},
+				include: [
+					{
+						model: CharacterMovie,
+						attributes: [],
+						where: { movieId }
+					}
+				]
+			});
+		} else if (age && !movieId) {
+			allCharacters = await Character.findAll({
+				attributes: ['name', 'picture'],
+				where: {
+					name: { [Op.like]: `%${name}%` },
+					age
+				}
+			});
+		} else {
+			allCharacters = await Character.findAll({
+				attributes: ['name', 'picture'],
+				where: {
+					name: { [Op.like]: `%${name}%` },
+					age
+				},
+				include: [
+					{
+						model: CharacterMovie,
+						attributes: [],
+						where: { movieId }
+					}
+				]
+			});
+		}
 		return allCharacters;
 	} catch (error) {
 		return { error: error.message };

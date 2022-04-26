@@ -51,7 +51,7 @@ const register = async (dataNewCharacter, file, { errors }) => {
 
 const update = async (dataCharacter, id, file, { errors }) => {
 	try {
-		if (errors.length > 0) throw new Error(errors);
+		if (errors.length) throw new Error(errors);
 
 		if (file) {
 			dataCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
@@ -73,27 +73,46 @@ const update = async (dataCharacter, id, file, { errors }) => {
 };
 
 const remove = async (id, { errors }) => {
-	if (errors.length > 0) throw new Error(errors);
+	try {
+		if (errors.length) throw new Error(errors);
 
-	const deleteCharacter = await removeCharacter(id);
+		const deleteCharacter = await removeCharacter(id);
 
-	if (deleteCharacter.error) {
-		throw new Error(deleteCharacter.error);
+		if (deleteCharacter.error) {
+			throw new Error(deleteCharacter.error);
+		}
+
+		return deleteCharacter;
+	} catch (error) {
+		return { error: error.message };
 	}
-
-	return deleteCharacter;
 };
 
-const list = async () => await getAllCharacters();
+const list = async (filters, { errors }) => {
+	try {
+		if (errors.length) throw new Error(errors);
+		const characters = await getAllCharacters(filters);
+
+		if (characters.error) throw new Error(characters.error);
+
+		return characters;
+	} catch (error) {
+		return { error: error.message };
+	}
+};
 
 const details = async (id, { errors }) => {
-	if (errors.length > 0) throw new Error(errors);
+	try {
+		if (errors.length) throw new Error(errors);
 
-	const character = await getCharacterDetails(id);
+		const character = await getCharacterDetails(id);
 
-	if (character.error) throw new Error(character.error);
+		if (character.error) throw new Error(character.error);
 
-	return character;
+		return character;
+	} catch (error) {
+		return { error: error.message };
+	}
 };
 
 module.exports = { register, update, remove, list, details };

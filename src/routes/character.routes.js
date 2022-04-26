@@ -2,7 +2,8 @@ const { Router } = require('express');
 const {
 	body,
 	validationResult,
-	param
+	param,
+	query
 } = require('express-validator');
 const {
 	register,
@@ -98,14 +99,24 @@ routes.delete(
 	}
 );
 
-routes.get('/', async (req, res) => {
-	try {
-		const getAll = await list();
-		res.json(getAll);
-	} catch (error) {
-		res.status(500).json(error);
+routes.get(
+	'/',
+	[
+		query('name').trim().isAlpha().escape().optional(),
+		query('movieId').trim().isInt().optional(),
+		query('age').trim().isInt().optional()
+	],
+	async (req, res) => {
+		try {
+			const filters = req.query;
+			const errors = validationResult(req);
+			const getAll = await list(filters, errors);
+			res.json(getAll);
+		} catch (error) {
+			res.status(500).json(error);
+		}
 	}
-});
+);
 
 routes.get('/:id', param('id').trim().isInt(), async (req, res) => {
 	try {
