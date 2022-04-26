@@ -1,5 +1,5 @@
 const path = require('path');
-const { Movie } = require('../database');
+const { Movie, Character, CharacterMovie } = require('../database');
 const { unlinkSync } = require('fs');
 
 const createNewMovie = async (dataNewMovie) => {
@@ -81,9 +81,35 @@ const updateMovie = async (dataMovie, id) => {
 	}
 };
 
+const getMovieDetails = async (id) => {
+	try {
+		const movie = await Movie.findByPk(id, {
+			include: [
+				{
+					model: CharacterMovie,
+					attributes: ['characterId'],
+					include: {
+						model: Character,
+						attributes: [
+							'name',
+							'age',
+							'history',
+							'picture'
+						]
+					}
+				}
+			]
+		});
+
+		return movie;
+	} catch (error) {
+		return { error: error.message };
+	}
+};
 module.exports = {
 	createNewMovie,
 	getAllMovies,
 	removeMovie,
-	updateMovie
+	updateMovie,
+	getMovieDetails
 };

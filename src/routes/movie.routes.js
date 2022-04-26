@@ -8,7 +8,8 @@ const {
 	register,
 	list,
 	remove,
-	update
+	update,
+	details
 } = require('../services/movie.service');
 const __FilterFiles = require('../middlewares/FilterFiles.middleware');
 const __optionalFile = require('../middlewares/optionalFile.middleware');
@@ -104,5 +105,18 @@ routes.put(
 		}
 	}
 );
+
+routes.get('/:id', param('id').trim().isInt(), async (req, res) => {
+	try {
+		const { id } = req.params;
+		const errors = validationResult(req);
+		const movie = await details(id, errors);
+		res.json(movie);
+	} catch (error) {
+		error.msg
+			? res.status(400).json(error.msg)
+			: res.status(500).json(error);
+	}
+});
 
 module.exports = routes;

@@ -2,7 +2,8 @@ const {
 	createNewMovie,
 	getAllMovies,
 	removeMovie,
-	updateMovie
+	updateMovie,
+	getMovieDetails
 } = require('../storage/movie.storage');
 const { hostServer, portServer } = require('../config');
 const { unlinkSync } = require('fs');
@@ -59,4 +60,14 @@ const update = async (dataMovie, file, id, { errors }) => {
 
 const list = async () => await getAllMovies();
 
-module.exports = { register, list, remove, update };
+const details = async (id, { errors }) => {
+	if (errors.length > 0) throw new Error(errors);
+
+	const movie = await getMovieDetails(id);
+
+	if (movie.error) throw new Error(movie.error);
+
+	return movie;
+};
+
+module.exports = { register, list, remove, update, details };
