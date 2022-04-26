@@ -14,7 +14,7 @@ module.exports = (destiny) => {
 		from: email,
 		to: destiny,
 		subject: 'New Account in Disney API',
-		text: '<h1>your account has been created successfully</h1>'
+		text: 'your account has been created successfully'
 	};
 	transporter.sendMail(mailOptions, (error, info) =>
 		error
