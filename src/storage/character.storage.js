@@ -1,7 +1,7 @@
 const { unlinkSync } = require('fs');
 const path = require('path');
 
-const { Character, CharacterMovie } = require('../database');
+const { Character, CharacterMovie, Movie } = require('../database');
 const { sequelize } = require('../database');
 
 const createNewCharacter = async ({
@@ -20,8 +20,8 @@ const createNewCharacter = async ({
 		);
 
 		const movies = moviesCharacter.map((movie) => ({
-			character_id: dataValues.id,
-			movie_id: movie
+			characterId: dataValues.id,
+			movieId: movie
 		}));
 
 		await CharacterMovie.bulkCreate(movies, { transaction });
@@ -100,7 +100,23 @@ const getAllCharacters = async () => {
 
 const getCharacterDetails = async (id) => {
 	try {
-		const character = await Character.findByPk(id);
+		const character = await Character.findByPk(id, {
+			include: [
+				{
+					model: CharacterMovie,
+					attributes: ['movieId'],
+					include: {
+						model: Movie,
+						attributes: [
+							'title',
+							'picture',
+							'creationDate',
+							'score'
+						]
+					}
+				}
+			]
+		});
 
 		return character;
 	} catch (error) {

@@ -62,7 +62,7 @@ routes.put(
 		try {
 			const dataCharacter = req.body;
 			const { id } = req.params;
-			const file = req.file.filename;
+			const file = req.file?.filename;
 			const errors = validationResult(req);
 			const updateCharacter = await update(
 				dataCharacter,
