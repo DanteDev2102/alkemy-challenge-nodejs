@@ -1,5 +1,11 @@
 const path = require('path');
-const { Movie, Character, CharacterMovie } = require('../database');
+const { Op } = require('sequelize');
+const {
+	Movie,
+	Character,
+	CharacterMovie,
+	Gender
+} = require('../database');
 const { unlinkSync } = require('fs');
 
 const createNewMovie = async (dataNewMovie) => {
@@ -19,14 +25,37 @@ const createNewMovie = async (dataNewMovie) => {
 	}
 };
 
-const getAllMovies = async () => {
+const getAllMovies = async ({
+	genre = '',
+	order = 'ASC',
+	title = ''
+}) => {
 	try {
-		const allMovies = await Movie.findAll({
-			attributes: ['title', 'picture', 'creationDate']
-		});
+		let allMovies;
+
+		if (!genre) {
+			allMovies = await Movie.findAll({
+				attributes: ['title', 'picture', 'creationDate'],
+				where: { title: { [Op.like]: `%${title}%` } },
+				order: [['creationDate', order.toUpperCase()]]
+			});
+		} else {
+			allMovies = await Movie.findAll({
+				attributes: ['title', 'picture', 'creationDate'],
+				where: { title: { [Op.like]: `%${title}%` } },
+				include: [
+					{
+						model: Gender,
+						attributes: []
+					}
+				],
+				order: [['creationDate', order.toUpperCase()]]
+			});
+		}
 
 		return allMovies;
 	} catch (error) {
+		console.log(error);
 		return { error: error.message };
 	}
 };

@@ -2,6 +2,7 @@ const { Router } = require('express');
 const {
 	body,
 	param,
+	query,
 	validationResult
 } = require('express-validator');
 const {
@@ -47,14 +48,24 @@ routes.post(
 	}
 );
 
-routes.get('/', async (req, res) => {
-	try {
-		const getAll = await list();
-		res.json(getAll);
-	} catch (error) {
-		res.status(500).json(error);
+routes.get(
+	'/',
+	[
+		query('title').trim().isAlpha().optional(),
+		query('genre').trim().isInt().optional(),
+		query('order').trim().isAlpha().optional()
+	],
+	async (req, res) => {
+		try {
+			const errors = validationResult(req);
+			const filters = req.query;
+			const getAll = await list(filters, errors);
+			res.json(getAll);
+		} catch (error) {
+			res.status(500).json(error);
+		}
 	}
-});
+);
 
 routes.delete(
 	'/:id',

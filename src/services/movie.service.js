@@ -9,7 +9,7 @@ const { hostServer, portServer } = require('../config');
 const { unlinkSync } = require('fs');
 
 const register = async (dataNewMovie, file, { errors }) => {
-	if (errors.length > 0) {
+	if (errors.length) {
 		unlinkSync(`src/files/${file}`);
 		throw new Error(errors);
 	}
@@ -32,7 +32,7 @@ const register = async (dataNewMovie, file, { errors }) => {
 };
 
 const remove = async (id, { errors }) => {
-	if (errors.length > 0) throw new Error(errors);
+	if (errors.length) throw new Error(errors);
 
 	const deleteMovie = await removeMovie(id);
 
@@ -44,7 +44,7 @@ const remove = async (id, { errors }) => {
 };
 
 const update = async (dataMovie, file, id, { errors }) => {
-	if (errors.length > 0) throw new Error(errors);
+	if (errors.length) throw new Error(errors);
 
 	if (file) {
 		dataMovie.picture = `${hostServer}:${portServer}/files/${file}`;
@@ -58,10 +58,24 @@ const update = async (dataMovie, file, id, { errors }) => {
 	return modifiedMovie;
 };
 
-const list = async () => await getAllMovies();
+const list = async (filters, { errors }) => {
+	try {
+		if (errors.length) throw new Error(errors);
+
+		const movies = await getAllMovies(filters);
+
+		if (movies.error) {
+			throw new Error(movies.error);
+		}
+
+		return movies;
+	} catch (error) {
+		return { error: error.message };
+	}
+};
 
 const details = async (id, { errors }) => {
-	if (errors.length > 0) throw new Error(errors);
+	if (errors.length) throw new Error(errors);
 
 	const movie = await getMovieDetails(id);
 
