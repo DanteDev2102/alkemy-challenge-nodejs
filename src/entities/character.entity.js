@@ -9,7 +9,8 @@ module.exports = (sequelize, type) => {
 			},
 			name: {
 				type: type.STRING(60),
-				allowNull: false
+				allowNull: false,
+				unique: true
 			},
 			age: {
 				type: type.INTEGER,

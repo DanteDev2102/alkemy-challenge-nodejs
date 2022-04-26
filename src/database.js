@@ -18,12 +18,6 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
 	dialect
 });
 
-const Character = CharacterModel(sequelize, Sequelize);
-const Gender = GenderModel(sequelize, Sequelize);
-const User = UserModel(sequelize, Sequelize);
-const Movie = MovieModel(sequelize, Sequelize);
-const CharacterMovie = CharacterMovieModel(sequelize, Sequelize);
-
 const databaseConnect = () => {
 	const authorization = sequelize.authenticate();
 	const createTables = sequelize.sync({ force: false });
@@ -35,6 +29,17 @@ const databaseConnect = () => {
 		});
 };
 
+const Character = CharacterModel(sequelize, Sequelize);
+const Gender = GenderModel(sequelize, Sequelize);
+const User = UserModel(sequelize, Sequelize);
+const Movie = MovieModel(sequelize, Sequelize);
+const CharacterMovie = CharacterMovieModel(sequelize, Sequelize);
+
+Character.CharacterMovie = Character.hasMany(CharacterMovie);
+CharacterMovie.Character = CharacterMovie.belongsTo(Character);
+Movie.CharacterMovie = Movie.hasMany(CharacterMovie);
+CharacterMovie.Movie = CharacterMovie.belongsTo(Movie);
+
 module.exports = {
 	databaseConnect,
 	Character,
@@ -42,5 +47,6 @@ module.exports = {
 	User,
 	Movie,
 	Character,
-	CharacterMovie
+	CharacterMovie,
+	sequelize
 };

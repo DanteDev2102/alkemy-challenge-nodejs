@@ -1,21 +1,37 @@
 const { unlinkSync } = require('fs');
 const path = require('path');
-const { Character } = require('../database');
 
-const createNewCharacter = async (dataNewCharacter) => {
+const { Character, CharacterMovie } = require('../database');
+const { sequelize } = require('../database');
+
+const createNewCharacter = async ({
+	name,
+	age,
+	history,
+	picture,
+	moviesCharacter
+}) => {
+	const transaction = await sequelize.transaction();
+
 	try {
-		const [{ dataValues }, created] =
-			await Character.findOrCreate({
-				where: { name: dataNewCharacter.name },
-				defaults: { ...dataNewCharacter }
-			});
+		const { dataValues } = await Character.create(
+			{ name, age, history, picture },
+			{ transaction }
+		);
 
-		if (!created) {
-			throw new Error('character already exist');
-		}
+		const movies = moviesCharacter.map((movie) => ({
+			character_id: dataValues.id,
+			movie_id: movie
+		}));
+
+		await CharacterMovie.bulkCreate(movies, { transaction });
+
+		await transaction.commit();
 
 		return dataValues;
 	} catch (error) {
+		console.log(error);
+		await transaction.rollback();
 		return { error: error.message };
 	}
 };

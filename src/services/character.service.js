@@ -12,12 +12,26 @@ const {
 
 const register = async (dataNewCharacter, file, { errors }) => {
 	try {
-		if (errors.length > 0) {
+		if (errors.length) {
 			unlinkSync(`src/files/${file}`);
 			throw new Error(errors);
 		}
 
-		dataNewCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
+		if (!dataNewCharacter.moviesCharacter.length) {
+			throw new Error('movies is empy');
+		}
+
+		if (file) {
+			dataNewCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
+		} else {
+			dataNewCharacter.picture = `${hostServer}:${portServer}/files/default.png`;
+			file = 'default.png';
+		}
+
+		const moviesFormated = new Set(
+			dataNewCharacter.moviesCharacter
+		);
+		dataNewCharacter.moviesCharacter = [...moviesFormated];
 
 		const newCharacter = await createNewCharacter(
 			dataNewCharacter
@@ -30,6 +44,7 @@ const register = async (dataNewCharacter, file, { errors }) => {
 
 		return newCharacter;
 	} catch (error) {
+		console.log(error);
 		return { error: error.message };
 	}
 };

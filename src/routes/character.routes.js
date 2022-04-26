@@ -26,7 +26,7 @@ routes.post(
 	],
 	async (req, res) => {
 		try {
-			const file = req.file.filename;
+			const file = req.file?.filename;
 			const dataNewCharacter = req.body;
 			const errors = validationResult(req);
 			const newCharacter = await register(
@@ -36,6 +36,7 @@ routes.post(
 			);
 			res.status(201).json(newCharacter);
 		} catch (error) {
+			console.log(error);
 			error.msg
 				? res.status(400).json(error.msg)
 				: Array.isArray(error)
