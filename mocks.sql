@@ -1,13 +1,13 @@
 use disney;
 
-insert into characters (name,age,history,picture)
-values ('aladin',22,'cualquier historia posible','http://localhost:3001/files/default.png'),
-       ('gruñon',100,'cualquier historia posible','http://localhost:3001/files/default.png'),
-       ('tontin',50,'cualquier historia posible','http://localhost:3001/files/default.png'),
-       ('bestia',31,'cualquier historia posible','http://localhost:3001/files/default.png'),
-       ('bella',25,'cualquier historia posible','http://localhost:3001/files/default.png'),
-       ('hada madrina',78,'cualquier historia posible','http://localhost:3001/files/default.png'),
-       ('jasmin',18,'cualquier historia posible','http://localhost:3001/files/default.png');
+insert into characters (name,age,weight,history,picture)
+values ('aladin',22,75,'cualquier historia posible','http://localhost:3001/files/default.png'),
+       ('gruñon',100,25,'cualquier historia posible','http://localhost:3001/files/default.png'),
+       ('tontin',50,20,'cualquier historia posible','http://localhost:3001/files/default.png'),
+       ('bestia',31,95,'cualquier historia posible','http://localhost:3001/files/default.png'),
+       ('bella',25,65,'cualquier historia posible','http://localhost:3001/files/default.png'),
+       ('hada madrina',78,55,'cualquier historia posible','http://localhost:3001/files/default.png'),
+       ('jasmin',18,55,'cualquier historia posible','http://localhost:3001/files/default.png');
 
 insert into genders (name,picture)
 values ('aventura','http://localhost:3001/files/default.png'),

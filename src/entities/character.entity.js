@@ -19,6 +19,10 @@ module.exports = (sequelize, type) => {
 					min: 1
 				}
 			},
+			weight: {
+				type: type.INTEGER,
+				allowNull: false
+			},
 			history: {
 				type: type.TEXT,
 				allowNull: false

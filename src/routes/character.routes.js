@@ -13,7 +13,6 @@ const {
 	details
 } = require('../services/character.service');
 const __FilterFiles = require('../middlewares/FilterFiles.middleware');
-const __optionalFile = require('../middlewares/optionalFile.middleware');
 
 const routes = Router();
 
