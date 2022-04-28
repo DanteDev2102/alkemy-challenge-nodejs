@@ -1,10 +1,10 @@
-##ALKEMY NODE.JS CHALLENGE
+## ALKEMY NODE.JS CHALLENGE
 
-## Modelado de la Base de datos
+### Modelado de la Base de datos
 
 ![](modelo-entidad-relacion.png)
 
-##Como usar el repositorio
+### Como usar el repositorio
 
 1. Instalar las dependencias con el comando yarn.
 2. Crear una nueva base de datos en MySql llamada "disney".
