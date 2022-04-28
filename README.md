@@ -1,8 +1,8 @@
-#ALKEMY NODE.JS CHALLENGE
+##ALKEMY NODE.JS CHALLENGE
 
 ## Modelado de la Base de datos
 
-![](modelo-entidad-relacion.png){width='100px'}
+![](modelo-entidad-relacion.png)
 
 ##Como usar el repositorio
 
