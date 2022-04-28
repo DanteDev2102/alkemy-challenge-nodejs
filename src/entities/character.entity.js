@@ -20,7 +20,7 @@ module.exports = (sequelize, type) => {
 				}
 			},
 			weight: {
-				type: type.INTEGER,
+				type: type.STRING(10),
 				allowNull: false
 			},
 			history: {

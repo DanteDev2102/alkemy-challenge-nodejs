@@ -22,7 +22,8 @@ routes.post(
 		__FilterFiles,
 		body('name').isAlpha().trim().escape(),
 		body('age').trim().isInt(),
-		body('history').isString().trim().escape()
+		body('history').isString().trim().escape(),
+		body('weight').trim().isNumeric()
 	],
 	async (req, res) => {
 		try {
@@ -55,6 +56,7 @@ routes.put(
 		body('age').trim().isInt().optional(),
 		body('history').isString().trim().escape().optional(),
 		param('id').trim().isInt(),
+		body('weight').trim().isNumeric().optional,
 		__FilterFiles
 	],
 	async (req, res) => {

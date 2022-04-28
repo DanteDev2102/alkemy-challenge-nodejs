@@ -9,13 +9,14 @@ const createNewCharacter = async ({
 	age,
 	history,
 	picture,
+	weight,
 	moviesCharacter
 }) => {
 	const transaction = await sequelize.transaction();
 
 	try {
 		const { dataValues } = await Character.create(
-			{ name, age, history, picture },
+			{ name, age, history, picture, weight: `${weight}kg` },
 			{ transaction }
 		);
 
@@ -45,7 +46,8 @@ const updateCharacter = async (dataCharacter, id) => {
 
 		const updateCharacter = {
 			...findCharacter.dataValues,
-			...dataCharacter
+			...dataCharacter,
+			weigth: `${weight}kg`
 		};
 
 		if (dataCharacter.picture) {
