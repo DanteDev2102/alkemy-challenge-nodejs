@@ -56,7 +56,6 @@ routes.put(
 		body('age').trim().isInt().optional(),
 		body('history').isString().trim().escape().optional(),
 		param('id').trim().isInt(),
-		__optionalFile,
 		__FilterFiles
 	],
 	async (req, res) => {

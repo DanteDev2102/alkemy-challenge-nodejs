@@ -53,7 +53,9 @@ const updateCharacter = async (dataCharacter, id) => {
 				.split('/')
 				.at(-1);
 
-			unlinkSync(path.join(__dirname, '../files', file));
+			if (file !== 'default.png') {
+				unlinkSync(path.join(__dirname, '../files', file));
+			}
 		}
 
 		await findCharacter.set(updateCharacter);
@@ -75,7 +77,9 @@ const removeCharacter = async (id) => {
 
 		const file = character.dataValues.picture.split('/').at(-1);
 
-		unlinkSync(path.join(__dirname, '../files', file));
+		if (file !== 'default.png') {
+			unlinkSync(path.join(__dirname, '../files', file));
+		}
 
 		const deleteCharacter = await character.destroy();
 
@@ -85,11 +89,7 @@ const removeCharacter = async (id) => {
 	}
 };
 
-const getAllCharacters = async ({
-	movieId = '',
-	age = '',
-	name = ''
-}) => {
+const getAllCharacters = async ({ movieId, age, name = '' }) => {
 	try {
 		let allCharacters;
 

@@ -18,15 +18,13 @@ const register = async (dataNewCharacter, file, { errors }) => {
 		}
 
 		if (!dataNewCharacter.moviesCharacter.length) {
+			unlinkSync(`src/files/${file}`);
 			throw new Error('movies is empy');
 		}
 
-		if (file) {
-			dataNewCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
-		} else {
-			dataNewCharacter.picture = `${hostServer}:${portServer}/files/default.png`;
-			file = 'default.png';
-		}
+		if (!file) throw new Error('picture is empy');
+
+		dataNewCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
 
 		const moviesFormated = new Set(
 			dataNewCharacter.moviesCharacter
@@ -44,18 +42,20 @@ const register = async (dataNewCharacter, file, { errors }) => {
 
 		return newCharacter;
 	} catch (error) {
-		console.log(error);
 		return { error: error.message };
 	}
 };
 
-const update = async (dataCharacter, id, file, { errors }) => {
+const update = async (
+	dataCharacter,
+	id,
+	file = 'default.png',
+	{ errors }
+) => {
 	try {
 		if (errors.length) throw new Error(errors);
 
-		if (file) {
-			dataCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
-		}
+		dataCharacter.picture = `${hostServer}:${portServer}/files/${file}`;
 
 		const modifiedCharacter = await updateCharacter(
 			dataCharacter,

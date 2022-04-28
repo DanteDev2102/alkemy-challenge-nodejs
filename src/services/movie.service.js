@@ -48,6 +48,8 @@ const update = async (dataMovie, file, id, { errors }) => {
 
 	if (file) {
 		dataMovie.picture = `${hostServer}:${portServer}/files/${file}`;
+	} else {
+		dataMovie.picture = `${hostServer}:${portServer}/files/default.png`;
 	}
 	const modifiedMovie = await updateMovie(dataMovie, id);
 

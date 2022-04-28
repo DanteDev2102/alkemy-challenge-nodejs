@@ -13,7 +13,6 @@ const {
 	details
 } = require('../services/movie.service');
 const __FilterFiles = require('../middlewares/FilterFiles.middleware');
-const __optionalFile = require('../middlewares/optionalFile.middleware');
 
 const routes = Router();
 
@@ -23,11 +22,12 @@ routes.post(
 		__FilterFiles,
 		body('title').isString().trim().escape(),
 		body('creationDate').isDate(),
-		body('score').isInt()
+		body('score').isInt(),
+		body('gender_id').trim().isInt()
 	],
 	async (req, res) => {
 		try {
-			const file = req.file.filename;
+			const file = req.file?.filename;
 			const dataNewMovie = req.body;
 			const errors = validationResult(req);
 			const newMovie = await register(
@@ -91,13 +91,12 @@ routes.put(
 		body('creationDate').trim().isDate().optional(),
 		body('score').isInt().trim().optional(),
 		param('id').trim().isInt(),
-		__optionalFile,
 		__FilterFiles
 	],
 	async (req, res) => {
 		try {
 			const dataMovie = req.body;
-			const file = req.file.filename;
+			const file = req.file?.filename;
 			const { id } = req.params;
 			const errors = validationResult(req);
 			const updateMovie = await update(

@@ -20,7 +20,7 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
 
 const databaseConnect = () => {
 	const authorization = sequelize.authenticate();
-	const createTables = sequelize.sync({ force: false });
+	const createTables = sequelize.sync();
 	Promise.all([authorization, createTables])
 		.then(() => console.log('[db] connected'))
 		.catch((error) => {
@@ -37,8 +37,12 @@ const CharacterMovie = CharacterMovieModel(sequelize, Sequelize);
 
 Character.CharacterMovie = Character.hasMany(CharacterMovie);
 CharacterMovie.Character = CharacterMovie.belongsTo(Character);
+
 Movie.CharacterMovie = Movie.hasMany(CharacterMovie);
 CharacterMovie.Movie = CharacterMovie.belongsTo(Movie);
+
+Gender.Movie = Gender.hasMany(Movie);
+Movie.Gender = Movie.belongsTo(Gender);
 
 module.exports = {
 	databaseConnect,

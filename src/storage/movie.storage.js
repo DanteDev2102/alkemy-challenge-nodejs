@@ -25,11 +25,7 @@ const createNewMovie = async (dataNewMovie) => {
 	}
 };
 
-const getAllMovies = async ({
-	genre = '',
-	order = 'ASC',
-	title = ''
-}) => {
+const getAllMovies = async ({ genre, order = 'ASC', title = '' }) => {
 	try {
 		let allMovies;
 
@@ -46,7 +42,8 @@ const getAllMovies = async ({
 				include: [
 					{
 						model: Gender,
-						attributes: []
+						attributes: [],
+						where: { id: genre }
 					}
 				],
 				order: [['creationDate', order.toUpperCase()]]
@@ -70,7 +67,9 @@ const removeMovie = async (id) => {
 
 		const file = movie.dataValues.picture.split('/').at(-1);
 
-		unlinkSync(path.join(__dirname, '../files', file));
+		if (file !== 'default.png') {
+			unlinkSync(path.join(__dirname, '../files', file));
+		}
 
 		const deleteMovie = await movie.destroy();
 
@@ -98,7 +97,9 @@ const updateMovie = async (dataMovie, id) => {
 				.split('/')
 				.at(-1);
 
-			unlinkSync(path.join(__dirname, '../files', file));
+			if (file !== 'default.png') {
+				unlinkSync(path.join(__dirname, '../files', file));
+			}
 		}
 
 		await findMovie.set(updateMovie);
@@ -119,13 +120,12 @@ const getMovieDetails = async (id) => {
 					attributes: ['characterId'],
 					include: {
 						model: Character,
-						attributes: [
-							'name',
-							'age',
-							'history',
-							'picture'
-						]
+						attributes: ['name', 'picture']
 					}
+				},
+				{
+					model: Gender,
+					attributes: ['name']
 				}
 			]
 		});
