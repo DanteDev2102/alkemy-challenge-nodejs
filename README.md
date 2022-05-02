@@ -12,7 +12,5 @@
 4. Iniciar el proyecto con el comando yarn start.
 5. Ejecutar el script sql para tener data dami.
 
-**Para conocer como usar los enpoints ingresar al endpoint "/doc"**
-
 **Tomar en cuenta que todos los registros tendran la imagen por defecto, la cual es posible cambiar sin problema
 en cualquier registro a excepcion de los generos ya que los mismos no poseen endpoints.**

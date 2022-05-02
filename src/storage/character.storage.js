@@ -47,7 +47,9 @@ const updateCharacter = async (dataCharacter, id) => {
 		const updateCharacter = {
 			...findCharacter.dataValues,
 			...dataCharacter,
-			weigth: `${weight}kg`
+			weigth: `${
+				dataCharacter.weight || findCharacter.weight
+			}kg`
 		};
 
 		if (dataCharacter.picture) {
